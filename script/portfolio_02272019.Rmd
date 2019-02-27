@@ -1,0 +1,28 @@
+---
+title: "Final Project - Portfolio"
+author: "Tamara Niella"
+date: "February 27, 2019"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+
+library(aod)
+library(ggplot2)
+library(here)
+library(tidyverse)
+library(rio)
+library(magrittr)
+library(skimr)
+library(janitor)
+library(fastDummies)
+library(reshape2)
+library(wesanderson)
+library(ggridges)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
