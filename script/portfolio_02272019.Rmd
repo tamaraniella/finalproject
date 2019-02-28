@@ -97,6 +97,16 @@ summary3<- data%>%
   group_by(mindset2)%>%
   summarize(prop_agreement =round(mean(agreement),2))
 
+
+#try 1: plot 1 (including stories division)
+
+ggplot(summary2, aes(story, prop_agreement))+
+  geom_col(aes(fill=Mindset), position = "dodge", alpha=.7)+
+  scale_fill_manual(values=wes_palette(name="Moonrise2", n=2))+
+  labs(title= "Proportion of agreement in Control vs Doubt, by Story", x = "Story", y = "Proportion of agreement")+
+  theme_minimal()
+
+
 ```
 
 
