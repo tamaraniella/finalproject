@@ -189,6 +189,28 @@ The goal would be to communicate the effect of the mindset participants are give
 
 ```{r}
 
+#I am going to focus on data from the interaction condition and for this I will look at individual data (Parts 1 and 3 were done individually, not in pairs)
+
+data_ok <- dat_int %>% filter(problem==0)
+data_ok$mindset <-  gsub("Treatment", "Doubt", data_ok$mindset)
+
+mindset3 <- rep(data_ok$mindset, 4)
+
+judge_p1 <- c(data_ok$s1_judge_p1, data_ok$s2_judge_p1)
+judge_p3 <- c(data_ok$s1_judge_p3, data_ok$s2_judge_p3)
+judge <- c(judge_p1, judge_p3)
+story3 <- rep(as.factor(c(rep.int(1,92), rep.int(2,92))),2)
+part <-as.factor(c(rep.int(1,184), rep.int(3,184)))
+
+
+data_3<- data.frame(mindset3, judge, story3,part)
+
+data_3$story3 <- gsub("1", "Freedom of Speech", data_3$story3)
+data_3$story3 <- gsub("2", "Cyber Privacy", data_3$story3)
+
+
+
+
 ```
 
 
