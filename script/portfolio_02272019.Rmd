@@ -66,9 +66,36 @@ dat_dyad$mindset <-  gsub("Treatment", "Doubt", dat_dyad$mindset)
 #coding mindset as factor 
 
 dat_dyad$mindset<-  as.factor(dat_dyad$mindset)
-#dat_dyad$dyad_ag_s1<-  as.factor(dat_dyad$dyad_ag_s1)
-#dat_dyad$dyad_ag_s2<-  as.factor(dat_dyad$dyad_ag_s2)
+```
 
+
+```{r plot1}
+#I want to see the dyad aswers for agreement (yes or no) for both stories, then I will create a new data set with one variable for agreement, that will iclude agreement for stories one and 2 and another variable that will indicate whether that agreement belongs to story 1 (freedom of speech) or 2 (cyber privacy)
+
+mindset2 <- rep(dat_dyad$mindset, 2)
+agreement <- c(dat_dyad$dyad_ag_s1, dat_dyad$dyad_ag_s2)
+story <- as.factor(c(rep.int(1,36), rep.int(2,36)))
+
+
+data<- data.frame(mindset2, agreement, story)
+
+#change values of variable "story", names for numbers (I will only need this if I decide to show the proportions of agreement for the different stories - which is not totally relevant to the results of the study, so I am still debating about it )
+
+data$story <- gsub("1", "Freedom of Speech", data$story)
+data$story <- gsub("2", "Cyber Privacy", data$story)
+
+#try 1: summarizing data for plot 1 (version dividing agreement not only per mindset but also per story)
+
+summary2<- data%>% 
+  group_by(mindset2, story)%>%
+  summarize(prop_agreement =round(mean(agreement),2))
+summary2%<>% rename("Mindset" = mindset2)
+
+#try 2: summarizing data for plot 1 (version dividing agreement only per mindset)
+
+summary3<- data%>% 
+  group_by(mindset2)%>%
+  summarize(prop_agreement =round(mean(agreement),2))
 
 ```
 
