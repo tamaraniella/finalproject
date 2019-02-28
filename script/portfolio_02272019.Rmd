@@ -179,14 +179,16 @@ ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
 
 #Plot 3 
 
-I want to compare the variation in Judgement from Part 1 to Part 3 (∆Judgment1-3) between the 2 different mindset groups. 
+I want to compare the distribution of Judgement from Part 1 to Part 3 between the 2 different mindset groups >> to see whether the sample becomes mor eor less polarized after discussion depending to what mindset group they belonged
 
-This could be represented using histograms with ggridges , where we would have an histogram of Judgment Part and Judgment Part 3 for the Control group and another for the Doubt group. 
+This could be represented using histograms  , where we would have an histogram of Judgment Part 1 and Judgment Part 3 for the Control group and another for the Doubt group. 
 
 I am still trying to think what is the best way of representing this. A line graph with mean differences could also be good representation. 
 
-The goal would be to communicate the effect of the mindset participants are given, in how much their own opinion on a moral or political issue changes after discussing it with someone else. 
+The goal would be to communicate the effect of the mindset that is given to participants, in how much their own opinion on a moral or political issue changes after discussing it with someone else, and whether people get closer in opinion or not. 
 
+ THE PLOT(S) FOR THIS CREATED AS OF 02.27.2019 ARE VERY VERY PRELIMINARY - it took me a long while to figure out what the best way to look at this data is, and I am still not sure if this is the right one
+ 
 ```{r}
 
 #I am going to focus on data from the interaction condition and for this I will look at individual data (Parts 1 and 3 were done individually, not in pairs)
@@ -208,7 +210,21 @@ data_3<- data.frame(mindset3, judge, story3,part)
 data_3$story3 <- gsub("1", "Freedom of Speech", data_3$story3)
 data_3$story3 <- gsub("2", "Cyber Privacy", data_3$story3)
 
+data_3 %<>% drop_na(judge)
 
+#Plot 3 for doubt mindset 
+
+data_3 %>% filter(mindset3== "Doubt")%>%
+ggplot(aes(judge))+
+  geom_histogram()+
+  facet_wrap(~part)
+
+#plot 3 for control mindset 
+
+data_3 %>% filter(mindset3== "Control")%>%
+ggplot(aes(judge))+
+  geom_histogram()+
+  facet_wrap(~part)
 
 
 ```
