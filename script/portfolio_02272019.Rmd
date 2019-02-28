@@ -69,6 +69,8 @@ dat_dyad$mindset<-  as.factor(dat_dyad$mindset)
 ```
 
 
+#Plot 1
+
 ```{r plot1}
 #I want to see the dyad aswers for agreement (yes or no) for both stories, then I will create a new data set with one variable for agreement, that will iclude agreement for stories one and 2 and another variable that will indicate whether that agreement belongs to story 1 (freedom of speech) or 2 (cyber privacy)
 
@@ -116,5 +118,24 @@ ggplot(summary3, aes(mindset2, prop_agreement))+
 
 ```
 
+#Plot 2
+
+```{r}
+imagine <- import(here("data", "sim_data_im.csv"))
+data_im <- data.frame(imagine$s1_agrement_y_n, imagine$s2_agrement_y_n)
+
+colnames(data_im)<- c("agreement_1im", "agreement_2im")
+
+agreement_im <- c(data_im$agreement_1im, data_im$agreement_2im)
+stories_im <- c(rep("Freedom of Speech", 34), rep("Cyber Privacy", 34) )
+data_im_long <- data.frame(agreement_im, stories_im)
+
+agreement_all <- c(agreement, agreement_im)
+condition <- as.factor(c(rep.int("interaction",72), rep.int("imagine",68)))
+stories_all <- as.factor(c(data$story, stories_im))
+
+data_in_im <- data.frame(agreement_all, condition, stories_all)
+
+```
 
 
