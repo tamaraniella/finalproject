@@ -121,6 +121,9 @@ ggplot(summary3, aes(mindset2, prop_agreement))+
 #Plot 2
 
 ```{r}
+
+#data set up
+
 imagine <- import(here("data", "sim_data_im.csv"))
 data_im <- data.frame(imagine$s1_agrement_y_n, imagine$s2_agrement_y_n)
 
@@ -135,6 +138,34 @@ condition <- as.factor(c(rep.int("interaction",72), rep.int("imagine",68)))
 stories_all <- as.factor(c(data$story, stories_im))
 
 data_in_im <- data.frame(agreement_all, condition, stories_all)
+
+#summary of proportions of agreement in imagine and interaction for plot 2 
+
+summary_cond<- data_in_im%>% 
+  group_by(condition)%>%
+  summarize(prop_agreement =mean(agreement_all))
+
+#plot 2 - version without dividing by stories 
+
+ggplot(summary_cond, aes(condition, prop_agreement))+
+  geom_col(alpha=.7, fill = c("#F1BB7B", "#FD6467"),width = .6)+
+  labs(title= "Agreement in Interaction  vs Expected agreement in Imagine", x = "Condition", y = "Proportion of agreement")+
+  theme_minimal()+
+  ylim(0, 1)
+
+#summary of proportions of agreement in imagine and interaction for plot 2 - version dividing by story 
+
+summary_cond_s<- data_in_im%>% 
+  group_by(condition, stories_all)%>%
+  summarize(prop_agreement =mean(agreement_all))
+
+#plot 2 - version dividing by stories 
+
+ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
+  geom_col(aes(fill=condition), position = "dodge", alpha=.7)+
+  scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
+  labs(title= "Agreement in Interaction  vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
+  theme_minimal()
 
 ```
 
