@@ -71,6 +71,10 @@ dat_dyad$mindset<-  as.factor(dat_dyad$mindset)
 
 #Plot 1
 
+A bar graph comparing the proportion of agreement (y-axis) between the participants who had the “control” mindset and the participants who got the “doubt” mindset (x- axis, 1 bar per group).
+The goal would be to communicate the effect of the mindset on the chances of reaching an agreement. 
+
+
 ```{r plot1}
 #I want to see the dyad aswers for agreement (yes or no) for both stories, then I will create a new data set with one variable for agreement, that will iclude agreement for stories one and 2 and another variable that will indicate whether that agreement belongs to story 1 (freedom of speech) or 2 (cyber privacy)
 
@@ -120,6 +124,10 @@ ggplot(summary3, aes(mindset2, prop_agreement))+
 
 #Plot 2
 
+A bar graph comparing the proportion of agreement (y-axis) between the interaction condition (interaction agreement) and the imagine condition (imagine agreement) - x- axis, 1 bar per group-.
+The goal would be to communicate whether participant’s expectancy of agreement is different to the actual proportion of agreement when participants have a real interaction face-to-face.
+
+
 ```{r}
 
 #data set up
@@ -166,6 +174,20 @@ ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
   scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
   labs(title= "Agreement in Interaction  vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
   theme_minimal()
+
+```
+
+#Plot 3 
+
+I want to compare the variation in Judgement from Part 1 to Part 3 (∆Judgment1-3) between the 2 different mindset groups. 
+
+This could be represented using histograms with ggridges , where we would have an histogram of Judgment Part and Judgment Part 3 for the Control group and another for the Doubt group. 
+
+I am still trying to think what is the best way of representing this. A line graph with mean differences could also be good representation. 
+
+The goal would be to communicate the effect of the mindset participants are given, in how much their own opinion on a moral or political issue changes after discussing it with someone else. 
+
+```{r}
 
 ```
 
