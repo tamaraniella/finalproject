@@ -9,6 +9,7 @@ output: html_document
 ```{r setup, include=FALSE}
 
 library(aod)
+#install.packages("aod")
 library(ggplot2)
 library(here)
 library(tidyverse)
@@ -17,6 +18,7 @@ library(magrittr)
 library(skimr)
 library(janitor)
 library(fastDummies)
+#install.packages("fastDummies")
 library(reshape2)
 library(wesanderson)
 library(ggridges)
@@ -25,9 +27,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
+The data wrangling seemed straightforward and all had a purpose! I added spaces between some of the code (before and after "=" and pipes) to it's easier to read. I've never used or seen the use of "gsub" before, interesting way to rename variables!
 ```{r data_wrangling}
 #Load data 
-
 
 dat_int<- import(here("Data", "sim_data_int.csv"))
 
@@ -35,28 +37,28 @@ dat_int<- import(here("Data", "sim_data_int.csv"))
 
 colnames(dat_int)[1]<- "mindset"
 
-dat_int%<>% janitor::clean_names()
+dat_int %<>% janitor::clean_names()
 
 #getting rid of subjects that in the expeirment had some kind of problem (did't complete task well etc), and I am only keeping data from one participant per dyad, since initially, I will only look at answers that dyads answered together (same answer for both participants, I only need one)
 
-dat_dyad<- dat_int%>% 
-  filter(problem==0, dyad_part== "A") 
+dat_dyad<- dat_int %>% 
+  filter(problem == 0, dyad_part == "A") 
 
 #getting demographic data (for potential methods section)
 
-dat_dem<- dat_int%>% 
-  filter(problem==0, gender>0)%>%
-  drop_na(age)%>%
+dat_dem<- dat_int %>% 
+  filter(problem == 0, gender > 0) %>%
+  drop_na(age) %>%
   select(gender, age)
 
 mean_age <- mean(dat_dem$age)
 sd_age <- sd(dat_dem$age)
 sum_fem <- dat_dem %>% 
-  filter(gender==2)%>%
+  filter(gender == 2 )%>%
   summarize(fem = length(gender))
 
 sum_dem <- dat_dem %>% 
-  group_by(gender)%>%
+  group_by(gender) %>%
   summarize(gen = length(gender))
 
 #renaming variable value names, changing "treatment for doubt", to improve explanation of study through graphs and analysis
@@ -65,7 +67,7 @@ dat_dyad$mindset <-  gsub("Treatment", "Doubt", dat_dyad$mindset)
 
 #coding mindset as factor 
 
-dat_dyad$mindset<-  as.factor(dat_dyad$mindset)
+dat_dyad$mindset <- as.factor(dat_dyad$mindset)
 ```
 
 
@@ -121,6 +123,8 @@ ggplot(summary3, aes(mindset2, prop_agreement))+
 
 
 ```
+Thoughts for plot 1:
+I think I actually like try 1 (including the story division)! You have a lot of good features in this plot! I like the use of theme minimal and alpha to see the lines behind the bars. The label axes and title are clear! My suggestion for this plot would be to increase the font size for the axes labels. You could also overlay the individual data points on the bars to show the distribution of data. I'm also curious if there's a group difference in the cyber privacy story by mindset!
 
 #Plot 2
 
@@ -172,14 +176,16 @@ summary_cond_s<- data_in_im%>%
 ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
   geom_col(aes(fill=condition), position = "dodge", alpha=.7)+
   scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
-  labs(title= "Agreement in Interaction  vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
+  labs(title= "Agreement in Interaction vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
   theme_minimal()
 
 ```
+Thoughts on plot 2:
+For this plot I also like the division by story and condition! It's really interesting how height the proportion of agreement is when they actually interaction- pretty cool! I really like the colors (although they might not be color blind safe). I think for this one it would also be nice to see the individual data points and the data distribution! It might also be helpful to make the y axis percent agreement and multiple by 100. For me it's easier to think in percent rather than proportion (even though it's the same thing)! It would also clean up the y axis a little!
 
 #Plot 3 
 
-I want to compare the distribution of Judgement from Part 1 to Part 3 between the 2 different mindset groups >> to see whether the sample becomes mor eor less polarized after discussion depending to what mindset group they belonged
+I want to compare the distribution of Judgement from Part 1 to Part 3 between the 2 different mindset groups >> to see whether the sample becomes or or less polarized after discussion depending to what mindset group they belonged
 
 This could be represented using histograms  , where we would have an histogram of Judgment Part 1 and Judgment Part 3 for the Control group and another for the Doubt group. 
 
@@ -226,7 +232,14 @@ ggplot(aes(judge))+
   geom_histogram()+
   facet_wrap(~part)
 
+#just thinking about what density plot might look like with your data 
+data_3 %>% filter(mindset3== "Control")%>%
+ggplot(aes(judge, color = part, fill = part))+
+  geom_density(alpha = 0.5)+
+  theme_minimal()
+
 
 ```
-
+Plot 3 thoughts: 
+I think you could try and use a density plot here and overlay the two different distributions (doubt and control mindset)! I added an example above for the control condition and overlay part 1 and 3. You might have to play with it a bit, but I think density plots look a little better than histograms! I know this is a rough draft but it'll be impotant to label the x axis so that it's descriptive! You have a good start though.
 
