@@ -114,12 +114,28 @@ ggplot(summary2, aes(story, prop_agreement))+
   labs(title= "Proportion of agreement in Control vs Doubt, by Story", x = "Story", y = "Proportion of agreement")+
   theme_minimal()
 
+
+# JP's recommendation
+ggplot(summary2, aes(story, prop_agreement))+
+  geom_point(aes(color = Mindset), size = 3, alpha = .7) +
+  scale_color_manual(values=wes_palette(name="Moonrise2", n=2))+
+   labs(title= "Proportion of agreement in Control vs Doubt, by Story", x = " ", y = "Proportion of agreement")+
+  theme_minimal() +
+  coord_flip()
+
 #try 2: plot 1 (without including stories division)
 
 ggplot(summary3, aes(mindset2, prop_agreement))+
   geom_col(alpha=.7, fill = c("#798E87", "#C27D38"),width = .6)+
   labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
   theme_minimal() 
+
+ggplot(summary3, aes(mindset2, prop_agreement))+
+  geom_point(size = 3, alpha = .7, color = "black") +
+  labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
+  theme_minimal() +
+  coord_flip()
+# I like the plot with the story colored by mindset as it adds more to what you are trying to show your audience over the plot not including stories. I like the palette that you included for the columns but I changed the columns for plots. I think the colors don't translate very well to points as the colors are better for columns. I also think it was smart to use proportions for this variable as it seems to be a dichotomous variable. I think it does an excellent job at showing differences between the control and doubting groups as well as based on story. 
 
 
 ```
@@ -157,6 +173,14 @@ summary_cond<- data_in_im%>%
   group_by(condition)%>%
   summarize(prop_agreement =mean(agreement_all))
 
+#JP Suggestion: 
+
+summary_cond_s<- data_in_im%>% 
+  group_by(condition, stories_all)%>%
+  summarize(prop_agreement =mean(agreement_all))
+  summarize(prop_agreement =mean(agreement_all),
+            se_agree = sundry::se(agreement_all))
+
 #plot 2 - version without dividing by stories 
 
 ggplot(summary_cond, aes(condition, prop_agreement))+
@@ -178,6 +202,21 @@ ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
   scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
   labs(title= "Agreement in Interaction vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
   theme_minimal()
+
+ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
+  geom_col(aes(fill=condition), position = "dodge", alpha=.7)+
+  scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
+  geom_col(aes(fill=condition), position = "dodge", alpha=.7, color = "white")+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = condition)) +
+  scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2), guide = "none")+
+  labs(title= "Agreement in Interaction  vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
+  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~condition)
+  
+# I think this plot works better as the columns you created rather than points. I think the plot was telling a interesting story and I just faceted it to provide a clearer picture for your audience. Lastly, I included some errorbars and got rid of the legend. 
 
 ```
 Thoughts on plot 2:
@@ -238,6 +277,45 @@ ggplot(aes(judge, color = part, fill = part))+
   geom_density(alpha = 0.5)+
   theme_minimal()
 
+
+#JP suggestions: 
+
+data_3 %>% filter(mindset3== "Doubt")%>%
+ggplot(aes(judge))+
+  geom_histogram()+
+  geom_histogram(bins = 10)+
+  facet_wrap(~part)
+
+#Plot 3 (JP)
+
+data_3 %>% filter(mindset3== "Doubt")%>%
+ggplot(aes(judge))+
+  geom_histogram()+
+  geom_histogram(bins = 10)+
+  facet_wrap(~part)
+#plot 3 for control mindset 
+data_3 %>% filter(mindset3== "Control")%>%
+ggplot(aes(judge))+
+  geom_histogram()+
+  geom_histogram(bins = 10)+
+  facet_wrap(~part)
+names(dat_int)
+jp_dat <- dat_int %>% 
+  filter(problem == 0) %>% 
+  select(mindset, 
+         s1_judge_p1,
+         s2_judge_p1,
+         s1_judge_p3,
+         s2_judge_p3) %>% 
+  gather(judge, score, -1) %>% 
+  separate(judge, c("s_type", "delete", "point"), sep = "_") %>% 
+  select(-delete)
+ggplot(jp_dat, aes(s_type, score)) +
+  geom_jitter(data = filter(jp_dat, point == "p1"), color = "#F97FF5") +
+  geom_jitter(data = filter(jp_dat, point == "p3"), color = "#1CA4D0") + 
+  facet_wrap(~mindset) +
+  theme_minimal()
+# Based on your discription, I tried to show the distribution together for p1 and p3. I ended up faceting it by the mindset and just tossed together some random numbers. I hope this helps with starting off what you want to convery in this plot. I ended up tidying the data to get the judge variables together as one score variable. My recommendation is that you can randomly choose one participant and maybe have an animated one where it picks one participant's p1 score and p3 score and sees if they have improved or not. I think that would be pretty cool to just show that either most participants improved, did not improve, or some did and some didn't. I look forward to seeing where you take this plot since it sounds really interesting to see how viewpoints change over time. Also, I apologize for naming it with my initials. I just wanted you to know what I did. I swear I'm not narcissistic. -JP
 
 ```
 Plot 3 thoughts: 
