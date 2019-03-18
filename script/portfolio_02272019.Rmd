@@ -123,6 +123,15 @@ ggplot(summary2, aes(story, prop_agreement))+
   theme_minimal() +
   coord_flip()
 
+#new version- process:  
+
+ggplot(summary2, aes(story, prop_agreement))+
+  geom_col(aes(fill = Mindset), position = "dodge", alpha=.7, size= 12) +
+  scale_fill_manual(values=wes_palette(name="Moonrise2", n=2))+
+  #theme_bw(base_size = 12)+
+  labs(title= "Proportion of agreement in Control vs Doubt, by Story", x = "Story", y = "Proportion of agreement")+
+  theme_minimal()
+
 #try 2: plot 1 (without including stories division)
 
 ggplot(summary3, aes(mindset2, prop_agreement))+
