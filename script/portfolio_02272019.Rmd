@@ -146,13 +146,13 @@ ggplot(summary3, aes(mindset2, prop_agreement))+
   labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
   theme_minimal(base_size = 15) 
 
-#version with uncertainy: 
+#version with uncertainy: OK VERSION
 
 ggplot(summary3_se, aes(mindset2, prop_agreement))+
   geom_col(alpha=.7, fill = c("#798E87", "#C27D38"),width = .5)+
   geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
                     ymax = prop_agreement + qnorm(0.975)*se_agree,
-                    group = mindset2), size=.5, width= .3) +
+                    group = mindset2), size=.3, width= .2) +
   labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
   theme_minimal(base_size = 15)
 
@@ -206,21 +206,38 @@ summary_cond<- data_in_im%>%
 
 summary_cond_s<- data_in_im%>% 
   group_by(condition, stories_all)%>%
-  summarize(prop_agreement =mean(agreement_all))
   summarize(prop_agreement =mean(agreement_all),
             se_agree = sundry::se(agreement_all))
 
-#plot 2 - version without dividing by stories 
+summary_cond_se1<- data_in_im%>% 
+  group_by(condition)%>%
+  summarize(prop_agreement =mean(agreement_all),
+            se_agree = sundry::se(agreement_all))
 
-ggplot(summary_cond, aes(condition, prop_agreement))+
+#plot 2 - version without dividing by stories #NEW OK VERSION with error bars 
+
+ggplot(summary_cond_se1, aes(condition, prop_agreement))+
+  geom_col(alpha=.7, fill = c("#F1BB7B", "#FD6467"),width = .5)+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = condition), size=.3, width= .2) +
+  labs(title= "Agreement in Interaction  vs Expected Agreement in Imagine", x = "Condition", y = "Proportion of agreement")+
+  theme_minimal(base_size = 15)+
+  ylim(0, 1) 
+
+#plot 2 - new version, without dividing by stories 
+
+ggplot(summary_cond_s, aes(condition, prop_agreement))+
   geom_col(alpha=.7, fill = c("#F1BB7B", "#FD6467"),width = .6)+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = condition)) +
   labs(title= "Agreement in Interaction  vs Expected agreement in Imagine", x = "Condition", y = "Proportion of agreement")+
   theme_minimal()+
   ylim(0, 1)
-
 #summary of proportions of agreement in imagine and interaction for plot 2 - version dividing by story 
 
-summary_cond_s<- data_in_im%>% 
+summary_cond_story<- data_in_im%>% 
   group_by(condition, stories_all)%>%
   summarize(prop_agreement =mean(agreement_all))
 
@@ -234,14 +251,13 @@ ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
 
 ggplot(summary_cond_s, aes(stories_all, prop_agreement))+
   geom_col(aes(fill=condition), position = "dodge", alpha=.7)+
-  scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
+  #scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2))+
   geom_col(aes(fill=condition), position = "dodge", alpha=.7, color = "white")+
   geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
                     ymax = prop_agreement + qnorm(0.975)*se_agree,
                     group = condition)) +
   scale_fill_manual(values=wes_palette(name="GrandBudapest1", n=2), guide = "none")+
   labs(title= "Agreement in Interaction  vs Expected agreement in Imagine, by Story", x = "Story", y = "Proportion of agreement")+
-  theme_minimal()
   theme_minimal() +
   facet_wrap(~condition)
   
