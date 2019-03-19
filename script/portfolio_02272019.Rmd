@@ -216,6 +216,11 @@ summary_cond_se1<- data_in_im%>%
   summarize(prop_agreement =mean(agreement_all),
             se_agree = sundry::se(agreement_all))
 
+summary_cond_se2<- data_in_im%>% 
+  group_by(condition)%>%
+  summarize(per_agreement =mean(agreement_all)*100,
+            se_agree = sundry::se(agreement_all)*100)
+
 #plot 2 - version without dividing by stories #NEW OK VERSION with error bars 
 
 ggplot(summary_cond_se1, aes(condition, prop_agreement))+
@@ -225,7 +230,30 @@ ggplot(summary_cond_se1, aes(condition, prop_agreement))+
                     group = condition), size=.3, width= .2) +
   labs(title= "Agreement in Interaction  vs Expected Agreement in Imagine", x = "Condition", y = "Proportion of agreement")+
   theme_minimal(base_size = 15)+
-  ylim(0, 1) 
+  ylim(0, 1)
+
+#plot 2 - version without dividing by stories #NEW OK VERSION with error bars AND percentage instead of proportion 
+
+ggplot(summary_cond_se2, aes(condition, per_agreement))+
+  geom_col(alpha=.7, fill = c("#F1BB7B", "#FD6467"),width = .5)+
+  geom_errorbar(aes(ymin = per_agreement + qnorm(0.025)*se_agree,
+                    ymax = per_agreement + qnorm(0.975)*se_agree,
+                    group = condition), size=.3, width= .2) +
+  labs(title= "Expected Agreement in Imagine vs Agreement in Interaction", x = "Condition", y = "Percentage of agreement")+
+  theme_minimal(base_size = 15)
+
+#NEW OK version of the plot above, with percentages, but with percentages signs: 
+
+
+ggplot(summary_cond_se1, aes(condition, prop_agreement))+
+  geom_col(alpha=.7, fill = c("#F1BB7B", "#FD6467"),width = .5)+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = condition), size=.3, width= .15) +
+  labs(title= "Expected Agreement in Imagine vs Agreement in Interaction", x = "Condition", y = "Percentage of agreement")+
+  theme_minimal(base_size = 15)+
+  ylim(0, 1)+
+  scale_y_continuous(labels = scales::percent)
 
 #plot 2 - new version, without dividing by stories 
 
@@ -237,6 +265,9 @@ ggplot(summary_cond_s, aes(condition, prop_agreement))+
   labs(title= "Agreement in Interaction  vs Expected agreement in Imagine", x = "Condition", y = "Proportion of agreement")+
   theme_minimal()+
   ylim(0, 1)
+
+
+
 #summary of proportions of agreement in imagine and interaction for plot 2 - version dividing by story 
 
 summary_cond_story<- data_in_im%>% 
