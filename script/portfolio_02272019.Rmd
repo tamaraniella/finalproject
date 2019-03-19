@@ -158,6 +158,17 @@ ggplot(summary3_se, aes(mindset2, prop_agreement))+
   labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
   theme_minimal(base_size = 15)
 
+#NEW updated version: uncertainty + new color pallette(more bright but still color blind firendly , #chevalier1) + percentage instead of proportion 
+
+ggplot(summary3_se, aes(mindset2, prop_agreement))+
+  geom_col(alpha=.7, fill = c("#446455", "#FDD262"),width = .5)+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = mindset2), size=.3, width= .15) +
+  labs(title= "Agreement in Control vs Doubt mindset groups", x = "Mindset", y = "Percentage of agreement") + 
+  theme_minimal(base_size = 15)+
+  scale_y_continuous(labels = scales::percent)
+
 
 
 #JP's suggestion
@@ -247,6 +258,18 @@ ggplot(summary_cond_se2, aes(condition, per_agreement))+
 
 ggplot(summary_cond_se1, aes(condition, prop_agreement))+
   geom_col(alpha=.7, fill = c("#F1BB7B", "#FD6467"),width = .5)+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = condition), size=.3, width= .15) +
+  labs(title= "Expected Agreement in Imagine vs Agreement in Interaction", x = "Condition", y = "Percentage of agreement")+
+  theme_minimal(base_size = 15)+
+  ylim(0, 1)+
+  scale_y_continuous(labels = scales::percent)
+
+#UPDATED VERSION - more color blind friendly colors #Darjeeling2 color palette
+
+ggplot(summary_cond_se1, aes(condition, prop_agreement))+
+  geom_col(alpha=.7, fill = c("#ECCBAE", "#046C9A"),width = .5)+
   geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
                     ymax = prop_agreement + qnorm(0.975)*se_agree,
                     group = condition), size=.3, width= .15) +
