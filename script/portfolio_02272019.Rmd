@@ -106,6 +106,12 @@ summary3<- data%>%
   group_by(mindset2)%>%
   summarize(prop_agreement =round(mean(agreement),2))
 
+#let's try to add uncertainty: 
+
+summary3_se<- data%>% 
+  group_by(mindset2)%>%
+  summarize(prop_agreement =round(mean(agreement),2), se_agree= sundry::se(agreement))
+
 
 #try 1: plot 1 (including stories division)
 
@@ -140,6 +146,19 @@ ggplot(summary3, aes(mindset2, prop_agreement))+
   labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
   theme_minimal(base_size = 15) 
 
+#version with uncertainy: 
+
+ggplot(summary3_se, aes(mindset2, prop_agreement))+
+  geom_col(alpha=.7, fill = c("#798E87", "#C27D38"),width = .5)+
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = mindset2), size=.5, width= .3) +
+  labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
+  theme_minimal(base_size = 15)
+
+
+
+#JP's suggestion
 ggplot(summary3, aes(mindset2, prop_agreement))+
   geom_point(size = 3, alpha = .7, color = "black") +
   labs(title= "Proportion of agreement in Control vs Doubt groups", x = "Mindset", y = "Proportion of agreement") + 
