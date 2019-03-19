@@ -22,6 +22,7 @@ library(fastDummies)
 library(reshape2)
 library(wesanderson)
 library(ggridges)
+library(sundry)
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -130,7 +131,7 @@ ggplot(summary2, aes(story, prop_agreement))+
   scale_fill_manual(values=wes_palette(name="Moonrise2", n=2))+
   #theme_bw(base_size = 12)+
   labs(title= "Proportion of agreement in Control vs Doubt, by Story", x = "Story", y = "Proportion of agreement")+
-  theme_minimal()
+  theme_minimal(base_size = 15)
 
 #try 2: plot 1 (without including stories division)
 
