@@ -97,7 +97,7 @@ data$story <- gsub("2", "Cyber Privacy", data$story)
 
 summary2<- data%>% 
   group_by(mindset2, story)%>%
-  summarize(prop_agreement =round(mean(agreement),2))
+  summarize(prop_agreement =round(mean(agreement),2), se_agree= sundry::se(agreement))
 summary2%<>% rename("Mindset" = mindset2)
 
 #try 2: summarizing data for plot 1 (version dividing agreement only per mindset)
@@ -134,8 +134,10 @@ ggplot(summary2, aes(story, prop_agreement))+
 
 ggplot(summary2, aes(story, prop_agreement))+
   geom_col(aes(fill = Mindset), position = "dodge", alpha=.7, size= 12) +
+  geom_errorbar(aes(ymin = prop_agreement + qnorm(0.025)*se_agree,
+                    ymax = prop_agreement + qnorm(0.975)*se_agree,
+                    group = Mindset), size=.3, width= .2, position=position_dodge(0.9)) +
   scale_fill_manual(values=wes_palette(name="Moonrise2", n=2))+
-  #theme_bw(base_size = 12)+
   labs(title= "Proportion of agreement in Control vs Doubt, by Story", x = "Story", y = "Proportion of agreement")+
   theme_minimal(base_size = 15)
 
@@ -191,7 +193,7 @@ stories_im <- c(rep("Freedom of Speech", 34), rep("Cyber Privacy", 34) )
 data_im_long <- data.frame(agreement_im, stories_im)
 
 agreement_all <- c(agreement, agreement_im)
-condition <- as.factor(c(rep.int("interaction",72), rep.int("imagine",68)))
+condition <- as.factor(c(rep.int("Interaction",72), rep.int("Imagine",68)))
 stories_all <- as.factor(c(data$story, stories_im))
 
 data_in_im <- data.frame(agreement_all, condition, stories_all)
