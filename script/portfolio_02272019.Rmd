@@ -432,59 +432,63 @@ tn_dat <- dat_int %>%
   gather(judge, score, -1) %>% 
   separate(judge, c("s_type", "delete", "part"), sep = "_") %>% 
   select(-delete)%>%
-  drop_na(score)
+  drop_na(score)%>%
+  rename(Mindset = mindset)
+
+tn_dat$part <- gsub("p1", "Part 1", tn_dat$part)
+tn_dat$part <- gsub("p3", "Part 3", tn_dat$part)
 
 ggplot(tn_dat, aes(part, score)) +
   geom_violin(color = "#F97FF5") +
-  facet_wrap(~mindset) +
+  facet_wrap(~Mindset) +
   theme_minimal()
 
 ggplot(tn_dat, aes(part, score)) +
-  geom_density_ridges(group= mindset) +
+  geom_density_ridges(group= Mindset) +
   #facet_wrap(~mindset) +
   theme_minimal()
 
 ggplot(tn_dat, aes(score, color = part, fill = part))+
   geom_density(alpha = 0.5)+
-  facet_wrap(~mindset) +
+  facet_wrap(~Mindset) +
   theme_minimal()
 
 ggplot(tn_dat, aes(score,part))+
   geom_density_ridges()+
-  facet_wrap(~mindset) +
+  facet_wrap(~Mindset) +
   theme_minimal()
 
 #adding colors 
 ggplot(tn_dat, aes(score,part))+
   geom_density_ridges(aes(fill=part))+
-  facet_wrap(~mindset) +
+  facet_wrap(~Mindset) +
   theme_minimal() 
 
 
-ggplot(tn_dat, aes(score,mindset))+
+ggplot(tn_dat, aes(score,Mindset))+
   geom_density_ridges()+
   facet_wrap(~part) +
   theme_minimal()
 
 #adding colors #I THINK I AM GOING TO KEEP THIS ONE
-ggplot(tn_dat, aes(score,mindset))+
-  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+ggplot(tn_dat, aes(score,Mindset))+
+  geom_density_ridges(aes(fill=Mindset, color= Mindset), alpha=.7)+
   scale_fill_manual(values=wes_palette(name="Cavalcanti1", n=2))+
   scale_color_manual(values=wes_palette(name="Cavalcanti1", n=2))+
   facet_wrap(~part) +
   theme_minimal(base_size = 15)
 
 #trying out Viridis palette
-ggplot(tn_dat, aes(score,mindset))+
-  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+ggplot(tn_dat, aes(score,Mindset))+
+  geom_density_ridges(aes(fill=Mindset, color= Mindset), alpha=.7)+
  scale_fill_viridis_d()+
  scale_color_viridis_d()+
   facet_wrap(~part) +
   theme_minimal(base_size = 15)
 
 #trying out Okabe Ito palette
-ggplot(tn_dat, aes(score,mindset))+
-  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+ggplot(tn_dat, aes(score,Mindset))+
+  geom_density_ridges(aes(fill=Mindset, color= Mindset), alpha=.7)+
   scale_fill_OkabeIto()+
   scale_color_OkabeIto()+
   facet_wrap(~part) +
@@ -492,12 +496,12 @@ ggplot(tn_dat, aes(score,mindset))+
 
 #Possible Final version: 
 
-ggplot(tn_dat, aes(score,mindset))+
-  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+ggplot(tn_dat, aes(score,Mindset))+
+  geom_density_ridges(aes(fill=Mindset, color= Mindset), alpha=.7)+
   scale_fill_OkabeIto(order=c(3,6))+
   scale_color_OkabeIto(order=c(3,6))+
   facet_wrap(~part) +
-  labs(title= "Distribution of Judgment before (Part 1) and after (Part 3) discussion with partner", x = "Judgment", y = "Density")+
+  labs(title = "Judgment Distribution", subtitle= "Distribution of Judgment before (Part 1) and after (Part 3) discussion with partner", x = "Judgment", y = "Density")+
   theme_minimal(base_size = 15)
 
 
@@ -506,7 +510,7 @@ ggplot(tn_dat, aes(score, color = part, fill = part))+
   geom_density(alpha = 0.4)+
   scale_fill_manual(values=wes_palette(name="Moonrise2", n=2))+
   scale_color_manual(values=wes_palette(name="Moonrise2", n=2))+
-  facet_wrap(~mindset, ncol=1) +
+  facet_wrap(~Mindset, ncol=1) +
   theme_minimal(base_size = 15)
 
 ```
