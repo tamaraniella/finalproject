@@ -23,6 +23,7 @@ library(reshape2)
 library(wesanderson)
 library(ggridges)
 library(sundry)
+library(colorblindr)
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -401,6 +402,7 @@ ggplot(aes(judge))+
   geom_histogram(bins = 10)+
   facet_wrap(~part)
 names(dat_int)
+
 jp_dat <- dat_int %>% 
   filter(problem == 0) %>% 
   select(mindset, 
@@ -417,6 +419,84 @@ ggplot(jp_dat, aes(s_type, score)) +
   facet_wrap(~mindset) +
   theme_minimal()
 # Based on your discription, I tried to show the distribution together for p1 and p3. I ended up faceting it by the mindset and just tossed together some random numbers. I hope this helps with starting off what you want to convery in this plot. I ended up tidying the data to get the judge variables together as one score variable. My recommendation is that you can randomly choose one participant and maybe have an animated one where it picks one participant's p1 score and p3 score and sees if they have improved or not. I think that would be pretty cool to just show that either most participants improved, did not improve, or some did and some didn't. I look forward to seeing where you take this plot since it sounds really interesting to see how viewpoints change over time. Also, I apologize for naming it with my initials. I just wanted you to know what I did. I swear I'm not narcissistic. -JP
+
+#New data wrangling based on JP suggestions: 
+
+tn_dat <- dat_int %>% 
+  filter(problem == 0) %>% 
+  select(mindset, 
+         s1_judge_p1,
+         s2_judge_p1,
+         s1_judge_p3,
+         s2_judge_p3) %>% 
+  gather(judge, score, -1) %>% 
+  separate(judge, c("s_type", "delete", "part"), sep = "_") %>% 
+  select(-delete)%>%
+  drop_na(score)
+
+ggplot(tn_dat, aes(part, score)) +
+  geom_violin(color = "#F97FF5") +
+  facet_wrap(~mindset) +
+  theme_minimal()
+
+ggplot(tn_dat, aes(part, score)) +
+  geom_density_ridges(group= mindset) +
+  #facet_wrap(~mindset) +
+  theme_minimal()
+
+ggplot(tn_dat, aes(score, color = part, fill = part))+
+  geom_density(alpha = 0.5)+
+  facet_wrap(~mindset) +
+  theme_minimal()
+
+ggplot(tn_dat, aes(score,part))+
+  geom_density_ridges()+
+  facet_wrap(~mindset) +
+  theme_minimal()
+
+#adding colors 
+ggplot(tn_dat, aes(score,part))+
+  geom_density_ridges(aes(fill=part))+
+  facet_wrap(~mindset) +
+  theme_minimal() 
+
+
+ggplot(tn_dat, aes(score,mindset))+
+  geom_density_ridges()+
+  facet_wrap(~part) +
+  theme_minimal()
+
+#adding colors #I THINK I AM GOING TO KEEP THIS ONE
+ggplot(tn_dat, aes(score,mindset))+
+  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+  scale_fill_manual(values=wes_palette(name="Cavalcanti1", n=2))+
+  scale_color_manual(values=wes_palette(name="Cavalcanti1", n=2))+
+  facet_wrap(~part) +
+  theme_minimal(base_size = 15)
+
+#trying out Viridis palette
+ggplot(tn_dat, aes(score,mindset))+
+  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+ scale_fill_viridis_d()+
+ scale_color_viridis_d()+
+  facet_wrap(~part) +
+  theme_minimal(base_size = 15)
+
+#trying out Okabe Ito palette
+ggplot(tn_dat, aes(score,mindset))+
+  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+  scale_fill_OkabeIto()+
+  scale_color_OkabeIto()+
+  facet_wrap(~part) +
+  theme_minimal(base_size = 15)
+
+#Another try for plot 3: 
+ggplot(tn_dat, aes(score, color = part, fill = part))+
+  geom_density(alpha = 0.4)+
+  scale_fill_manual(values=wes_palette(name="Moonrise2", n=2))+
+  scale_color_manual(values=wes_palette(name="Moonrise2", n=2))+
+  facet_wrap(~mindset, ncol=1) +
+  theme_minimal(base_size = 15)
 
 ```
 Plot 3 thoughts: 
