@@ -490,6 +490,17 @@ ggplot(tn_dat, aes(score,mindset))+
   facet_wrap(~part) +
   theme_minimal(base_size = 15)
 
+#Possible Final version: 
+
+ggplot(tn_dat, aes(score,mindset))+
+  geom_density_ridges(aes(fill=mindset, color= mindset), alpha=.7)+
+  scale_fill_OkabeIto(order=c(3,6))+
+  scale_color_OkabeIto(order=c(3,6))+
+  facet_wrap(~part) +
+  labs(title= "Distribution of Judgment before (Part 1) and after (Part 3) discussion with partner", x = "Judgment", y = "Density")+
+  theme_minimal(base_size = 15)
+
+
 #Another try for plot 3: 
 ggplot(tn_dat, aes(score, color = part, fill = part))+
   geom_density(alpha = 0.4)+
